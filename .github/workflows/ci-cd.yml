@@ -1,0 +1,41 @@
+name: .NET CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore ./Src/MyApp/MyApp.csproj
+
+    - name: Build
+      run: dotnet build ./Src/MyApp/MyApp.csproj -c Release --no-restore
+
+    - name: Test
+      run: dotnet test ./Tests/MyAppTests/MyAppTests.csproj --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish ./Src/MyApp/MyApp.csproj -c Release -o out
+
+    - name: Build Docker Image
+      run: docker build -t myapp .
+
+    - name: Push Docker Image
+      run: |
+        echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker tag myapp yourdockerhubusername/myapp:latest
+        docker push yourdockerhubusername/myapp:latest
