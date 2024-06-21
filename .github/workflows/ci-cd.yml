@@ -19,8 +19,11 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
+    - name: Restore dependencies for app
       run: dotnet restore ./Src/MyApp/MyApp.csproj
+
+    - name: Restore dependencies for tests
+      run: dotnet restore ./Tests/MyAppTests/MyAppTests.csproj
 
     - name: Build App
       run: dotnet build ./Src/MyApp/MyApp.csproj -c Release --no-restore
