@@ -26,6 +26,9 @@ jobs:
     - name: Publish
       run: dotnet publish ./Src/MyApp/MyApp.csproj -c Release -o out
 
+    - name: Zip Artifacts
+      run: zip -r myapp.zip ./Src/MyApp/out/*
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
@@ -43,7 +46,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Src/MyApp/out
+        asset_path: ./myapp.zip
         asset_name: myapp.zip
         asset_content_type: application/zip
 
