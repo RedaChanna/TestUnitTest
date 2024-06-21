@@ -22,8 +22,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./Src/MyApp/MyApp.csproj
 
-    - name: Build
+    - name: Build App
       run: dotnet build ./Src/MyApp/MyApp.csproj -c Release --no-restore
+
+    - name: Build Tests
+      run: dotnet build ./Tests/MyAppTests/MyAppTests.csproj -c Debug --no-restore
 
     - name: List files
       run: ls -R ./Tests/MyAppTests/bin/Debug/net8.0
