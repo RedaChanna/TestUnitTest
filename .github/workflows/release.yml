@@ -28,6 +28,9 @@ jobs:
     - name: Publish
       run: dotnet publish ./Src/MyApp/MyApp.csproj -c Release -o out
 
+    - name: List files in out directory
+      run: ls -R ./Src/MyApp/out
+
     - name: Zip Artifacts
       run: zip -r myapp.zip ./Src/MyApp/out/*
 
